@@ -11,6 +11,10 @@
         integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
         crossorigin=""></script>
 
+    <script type="text/javascript" src="leaflet.js"></script>
+	<link rel="stylesheet" type="text/css" href="leaflet-openweathermap.css" />
+	<script type="text/javascript" src="leaflet-openweathermap.js"></script>
+
     <script
         src="/https://github.com/devonvmaloney/fluxtower/blob/master/flux_sites.geojson"> </script>
 
@@ -31,25 +35,29 @@
     </style>
     <script>
 
-        var map = L.map('mapid').setView([35.905, -79.05], 15);
+        var map = L.map('mapid').setView([35.905, -79.05], 3);
 
-        L.tileLayer('http://maps.openweathermap.org/maps/2.0/weather/TA2/{z}/{x}/{y}?date=1527811200&opacity=0.9&fill_bound=true&appid=b3cb58b02b9e19a95041c7b4f741e885', {
-            attribution: '&copy; <a href="https://openweathermap.org/">OpenWeatherMap</a> contributors'
+        //L.tileLayer('http://maps.openweathermap.org/maps/2.0/weather/TA2/{z}/{x}/{y}?date=1527811200&opacity=0.9&fill_bound=true&appid=b3cb58b02b9e19a95041c7b4f741e885', {
+            //attribution: '&copy; <a href="https://openweathermap.org/">OpenWeatherMap</a> contributors'
+        //}).addTo(map);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+        var clouds = L.OWM.clouds({showLegend: false, opacity: 0.5, appId: 'b3cb58b02b9e19a95041c7b4f741e885'});
+        var city = L.OWM.current({intervall: 15, lang: 'de',
+			markerFunction: myOwmMarker, popupFunction: myOwmPopup});
+
+        var map = L.map('map', { center: new L.LatLng(51.5, 10), zoom: 10, layers: [osm] });
+        var baseMaps = { "OSM Standard": osm };
+        var overlayMaps = { "Clouds": clouds, "Cities": city };
+        var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+    
 
     </script>
 
     <script>
-
-        var redIcon = new L.Icon({
-            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-1x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        })
 
         var cherryIcon = L.icon({
             iconUrl: 'https://github.com/devonvmaloney/Leaflet_CherryTrees/blob/master/hiclipart.com.png',
