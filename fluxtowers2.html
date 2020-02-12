@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title> Map of UNC Cherry Trees </title>
+    <title> Map of Flux Towers </title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
         integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
@@ -12,12 +12,12 @@
         crossorigin=""></script>
 
     <script
-        src="/https://github.com/devonvmaloney/fluxtower/blob/master/flux_sites.geojson"> </script>
+        src="./flux_sites.geojson"> </script>
 
 </head>
 
 <body>
-    <b>Flux towers </b>
+    <b><h1>Flux towers</h1> </b>
     <br />
     Markers repersent the location of flux towers. 
 
@@ -33,10 +33,10 @@
 
         var map = L.map('mapid').setView([35.905, -79.05], 15);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://tile.openweathermap.org/map/temp_new/10/35/-79.png?appid=45caf9f8329c2f835ed4844e5275b597', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
-
+        
 
     </script>
 
@@ -56,7 +56,7 @@
                             { icon: towerIcon })
                             ;
                     }
-            }).addTo(map)
+            }).bindPopup(customPopup).addTo(map)
 
 
     </script>
