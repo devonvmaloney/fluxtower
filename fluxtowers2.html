@@ -16,7 +16,8 @@
  <body>
       <h1>Flux Towers</h1>
       <h2>Global network of flux towers</h2>
-      <body>Devon Maloney </body>
+      <h5>Devon Maloney </h5>
+</body>
       <div class="container"></div>
       <div id="mapid"></div>
     
@@ -34,26 +35,28 @@
 
 
        var map = L.map('mapid').setView([35.91, -79.05], 6);
-       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
-       {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
-       .addTo(map);
+       var towerIcon = L.icon({ 
+         iconUrl: 'pngfuel.com.png',
+         iconSize: [50,50], 
+         popupAnchor: [0,0] });
+       var customPopup = "Flux tower here";
+         L.geoJSON(fluxtowers, { 
+         pointToLayer: function (feature, latlng) { 
+         return L.marker(latlng, {icon: towerIcon});}}) 
+         .bindPopup(customPopup)
+         .addTo(map);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
+         {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
+         .addTo(map);
       L.marker([35.911271, -79.049807]).addTo(map);
  
- var towerIcon = L.icon({ 
- iconUrl: 'pngfuel.com.png',
- iconSize: [50,50], 
- popupAnchor: [0,0] });
+ 
 
-var customPopup = "Flux tower here";
-L.geoJSON(fluxtowers, { 
-pointToLayer: function (feature, latlng) { 
-return L.marker(latlng, {icon: towerIcon});}}) 
-.bindPopup(customPopup)
-.addTo(map);
+
 
 
       </script>
 
 
- </body>
+
 </html>
