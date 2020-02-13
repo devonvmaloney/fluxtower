@@ -1,0 +1,123 @@
+<html>
+ <head>
+ <title>Flux towers</title>
+
+ <link rel="stylesheet" 
+     href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" 
+    crossorigin=""/>
+ 
+ <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" 
+    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+    crossorigin=""></script>
+    
+    <link rel="stylesheet" href="./Leaflet.markercluster-1.0.5/MarkerCluster.css"/>
+    <script src="./Leaflet.markercluster-1.0.5/leaflet.markercluster.js"></script>
+
+ </head>
+ 
+ <body>
+      <h1>Flux Towers</h1>
+      <h2>Global network of flux towers</h2>
+      <body>Devon Maloney </body>
+      <div class="container"></div>
+      <div id="mapid"></div>
+    
+    <style>
+
+        #mapid{ 
+              width: 900px;
+               height: 500px;
+                }
+      </style>
+      
+      <script src="./flux_sites.geojson"></script>
+       
+       <script>
+
+
+       var map = L.OWM('mapid').setView([35.91, -79.05], 6);
+       L.TileLayer.extend({
+	    options: {
+		appId: '45caf9f8329c2f835ed4844e5275b597', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
+		baseUrl: "https://{s}.tile.openweathermap.org/map/{layername}/{z}/{x}/{y}.png",
+		maxZoom: 18,
+		showLegend: true,
+		legendImagePath: null,
+		legendPosition: 'bottomleft',
+		attribution: 'Weather from <a href="https://openweathermap.org/" alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>'
+	},
+      
+    initialize: function (options) {
+		L.Util.setOptions(this, options);
+		var tileurl = this.options.baseUrl.replace('mapid', this._owmLayerName);
+		tileurl = tileurl + '45caf9f8329c2f835ed4844e5275b597' + this.options.appId;
+
+		this._map = null;
+		this._legendControl = null;
+		this._legendId = null;
+		this._owmtileurl = tileurl;
+		L.TileLayer.prototype.initialize.call(this, this._owmtileurl, options);
+	},
+
+	onAdd: function(map) {
+		this._map = map;
+		if (this.options.showLegend && this.options.legendImagePath != null) {
+			this._legendControl = this._getLegendControl();
+			this._legendId = this._legendControl.addLegend(this.options.legendImagePath);
+		}
+		L.TileLayer.prototype.onAdd.call(this, map);
+	},
+
+	onRemove: function(map) {
+		if (this._legendControl != null) {
+			this._legendControl.removeLegend(this._legendId);
+			this._legendControl = null;
+			this._legendId = null;
+		}
+		L.TileLayer.prototype.onRemove.call(this, map);
+		this._map = null;
+	},
+
+	_getLegendControl: function() {
+		if (typeof this._map._owm_legendcontrol == 'undefined' || !this._map._owm_legendcontrol) {
+			this._map._owm_legendcontrol = new L.OWM.LegendControl({position: this.options.legendPosition});
+			this._map.addControl(this._map._owm_legendcontrol);
+		}
+		return this._map._owm_legendcontrol;
+	}
+});
+      
+      
+      L.marker([35.911271, -79.049807]).addTo(map)
+ 
+ var towerIcon = L.icon({ 
+ iconUrl: './pngfuel.com.png',
+ iconSize: [50,50], 
+ popupAnchor: [0,0] });
+
+var customPopup = "Flux towers here";
+L.geoJSON(fluxtowers, { 
+pointToLayer: function (feature, latlng) { 
+return L.marker(latlng, {icon: towerIcon});}}) 
+.bindPopup(customPopup)
+.addTo(map);
+
+
+ //Attempted to aggrigate      
+ //var towers =   L.geoJson(fluxtowers,{
+  //pointToLayer: function(feature,latlng){
+    //var marker = L.marker(latlng,{icon: towerIcon});
+    //marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
+    //return marker;}});
+
+//var clusters = L.markerClusterGroup();
+//clusters.addLayer(towers);
+//map.addLayer(clusters);
+      
+      
+      </script>
+
+
+ </body>
+</html>
