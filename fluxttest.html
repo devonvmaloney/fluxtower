@@ -1,101 +1,59 @@
-<!DOCTYPE html>
 <html>
-<head>
-    <title>Leaflet-OpenWeatherMap Example</title>
-    <meta charset="utf-8" />
-    <style>
-        html, body, #map {
-            height: 100%;
-            margin: 0px;
-        }
-    </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <head>
+ <title>Flux towers</title>
 
-    <link rel="stylesheet" href="../leaflet/leaflet.css" />
-    <link rel="stylesheet" href="css/leaflet-owm.css" />
-    <link rel="stylesheet" href="css/iconLayers.css" />
-</head>
-<body>
-
-    <div id="map"></div>
+ <link rel="stylesheet" 
+     href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" 
+    crossorigin=""/>
  
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-    <script src="../leaflet/leaflet-src.js"></script>
-    <script src="js/leaflet-owm.js"></script>
-    <script src="js/iconLayer.js"></script>
-    <script>
-        var providers = {};
+ <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" 
+    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+    crossorigin=""></script>
+   
+ </head>
+ 
+ <body>
+      <h1>Flux Towers</h1>
+      <h2>Global network of flux towers</h2>
+      <body>Devon Maloney </body>
+      <div class="container"></div>
+      <div id="mapid"></div>
+    
+    <style>
 
-        providers['OSM'] = {
-            title: 'OSM',
-            icon: 'img/layers-osm.png',
-            layer: L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            })
-        };
-
-        providers['Satellite'] = {
-            title: 'MODIS',
-            icon: 'img/layers-satellite.png',
-            layer: L.tileLayer('http://{s}.sat.owm.io/sql/{z}/{x}/{y}?select=b1,b4,b3&from=modis&order=last&color=modis&appid=45caf9f8329c2f835ed4844e5275b597', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://owm.io">VANE</a>'
-            })
-        };
-
-
-    </script>
-    <script>
-        var map = L.map('map').setView([60, 50], 3);
-
-        
-        //http://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=d9cfe451d5a775abaf178aec4951b4b0
-
-        var Temp = L.tileLayer('http://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=45caf9f8329c2f835ed4844e5275b597', {
-            maxZoom: 18,
-            attribution: '&copy; <a href="http://owm.io">VANE</a>',
-            id: 'temp'
-        }),
-
-        Precipitation = L.tileLayer('http://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=45caf9f8329c2f835ed4844e5275b597', {
-            maxZoom: 18,
-            attribution: '&copy; <a href="http://owm.io">VANE</a>'
-        }),
-
-        Wind = L.tileLayer('http://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=45caf9f8329c2f835ed4844e5275b597', {
-            maxZoom: 18,
-            attribution: '&copy; <a href="http://owm.io">VANE</a>'
-        }),
-
-        Pressure = L.tileLayer('http://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=45caf9f8329c2f835ed4844e5275b597', {
-            maxZoom: 18,
-            attribution: '&copy; <a href="http://owm.io">VANE</a>'
-        }),
+        #mapid{ 
+              width: 900px;
+               height: 500px;
+                }
+      </style>
+      
+      <script src="flux_sites.geojson"></script>
+       
+       <script>
 
 
-        Clouds = L.tileLayer('http://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=45caf9f8329c2f835ed4844e5275b597', {
-            maxZoom: 18,
-            attribution: '&copy; <a href="http://owm.io">VANE</a>'
-        });
+       var map = L.map('mapid').setView([35.91, -79.05], 6);
+       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
+       {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
+       .addTo(map);
+      L.marker([35.911271, -79.049807]).addTo(map)
+ 
+ var towerIcon = L.icon({ 
+ iconUrl: 'pngfuel.com.png',
+ iconSize: [50,50], 
+ popupAnchor: [0,0] });
 
-        var owm = new L.OWMLayer({key: 'b1b15e88fa797225412429c1c50c122a1'});
-        map.addLayer(owm);
-
-        Temp.addTo(map);
-
-        var overlays = {"Temperature": Temp, "Precipitation": Precipitation, "Clouds": Clouds, "Pressure": Pressure, "Wind": Wind};
-        L.control.layers(overlays, null, {collapsed:false}).addTo(map);
-
-        var layers = [];
-            for (var providerId in providers) {
-                layers.push(providers[providerId]);
-            }
-
-        L.control.iconLayers(layers).addTo(map);
-    </script>
+var customPopup = "Flux tower here";
+L.geoJSON(fluxtowers, { 
+pointToLayer: function (feature, latlng) { 
+return L.marker(latlng, {icon: towerIcon});}}) 
+.bindPopup(customPopup)
+.addTo(map);
 
 
-</body>
+      </script>
+
+
+ </body>
 </html>
